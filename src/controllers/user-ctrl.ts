@@ -43,10 +43,10 @@ export const getUserByEmail = async (
 
     res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({
+    console.error('Error fetching user with email', error);
+    return res.status(500).json({
       message: 'Oops! An internal server error occurred on our end.',
     });
-    console.log('Error fetching user with email', error);
   }
 };
 
@@ -92,8 +92,8 @@ export const getAllUsers = async (
 
     res.status(200).json(users);
   } catch (error) {
-    console.log('Error fetching user with email', error);
-    res.status(500).json({
+    console.error('Error fetching user with email', error);
+    return res.status(500).json({
       message: 'Internal server error.',
     });
   }
@@ -123,7 +123,7 @@ export const registerUser = async (
 
     res.status(201).json({ user });
   } catch (error) {
-    console.log('Error registering user!', error);
+    console.error('Error registering user!', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
         return res
@@ -131,7 +131,7 @@ export const registerUser = async (
           .json({ message: 'User with provided email already exists!' });
       }
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: 'Oops! An internal server error occurred on our end.',
     });
   }
@@ -166,8 +166,8 @@ export const loginUser = async (
 
     res.status(200).json({ user });
   } catch (error) {
-    console.log('Error logging in user', error);
-    res.status(500).json({
+    console.error('Error logging in user', error);
+    return res.status(500).json({
       message: 'Oops! An internal server error occurred on our end.',
     });
   }
@@ -197,8 +197,8 @@ export const loginUserWithProvider = async (
     });
     res.status(200).json({ user: newUser });
   } catch (error) {
-    console.log('Error logging in user', error);
-    res.status(500).json({
+    console.error('Error logging in user', error);
+    return res.status(500).json({
       message: 'Oops! An internal server error occurred on our end.',
     });
   }
@@ -217,8 +217,8 @@ export const deleteUser = async (
 
     res.status(200).json({ message: 'User deleted!' });
   } catch (error) {
-    console.log('Error deleting user!', error);
-    res.status(500).json({
+    console.error('Error deleting user!', error);
+    return res.status(500).json({
       message: 'Oops! An internal server error occurred on our end.',
     });
   }
@@ -253,13 +253,13 @@ export const updateUserOnboarding = async (
 
     res.status(200).json({ user });
   } catch (error) {
-    console.log('Error updating user onboarding!', error);
+    console.error('Error updating user onboarding!', error);
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === 'P2025') {
-        res.status(404).json({ message: 'User not found!' });
+        return res.status(404).json({ message: 'User not found!' });
       }
     }
-    res.status(500).json({
+    return res.status(500).json({
       message: 'Oops! An internal server error occurred on our end.',
     });
   }
@@ -382,13 +382,6 @@ export const getUserById = async (
 
     if (!user) return res.status(404).json({ message: 'User not found!' });
 
-    let isFollowing = false;
-    user.followers.forEach((follower) => {
-      if (follower.followerId === userId) {
-        isFollowing = true;
-      }
-    });
-
     res.status(200).json({ user, isFollowing: user.followers.length > 0 });
   } catch (error) {
     console.log('Error fetching user by id', error);
@@ -420,7 +413,7 @@ export const getUserContent = async (
           },
         },
       },
-      skip: (page - 1) * 6,
+      skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
     });
 
@@ -434,6 +427,7 @@ export const getUserContent = async (
 
     const contentCount = await prisma.content.count({
       where: {
+        authorId: id,
         type: type?.toUpperCase() as EContentType,
       },
     });

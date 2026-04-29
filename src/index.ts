@@ -9,6 +9,7 @@ import { contentRoutes } from '@/routes/content';
 import { groupRoutes } from '@/routes/group';
 import { searchRoutes } from '@/routes/search';
 import { userRoutes } from '@/routes/user';
+import { errorHandler, notFoundHandler } from '@/utils/middlewares';
 
 // ----------------------------------------------------------------
 
@@ -25,6 +26,8 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/search', searchRoutes);
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 const port = process.env.PORT || 8080;
 

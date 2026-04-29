@@ -62,3 +62,23 @@ export const validateReqQuery =
 
     next();
   };
+
+export const notFoundHandler = (req: Request, res: Response) => {
+  res.status(404).json({ message: `Route ${req.originalUrl} not found.` });
+};
+
+export const errorHandler = (
+  error: unknown,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  void next;
+  console.error('Unhandled error:', error);
+
+  if (res.headersSent) return;
+
+  res.status(500).json({
+    message: 'Oops! An internal server error occurred on our end.',
+  });
+};
