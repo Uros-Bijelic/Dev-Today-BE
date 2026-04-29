@@ -1,8 +1,4 @@
 import express from 'express';
-import {
-  validateRequestBody,
-  validateRequestParams,
-} from 'zod-express-middleware';
 
 import {
   createComment,
@@ -35,6 +31,7 @@ import {
   postSchema,
   tagsTitleSchema,
   updateMeetupSchema,
+  updatePodcastSchema,
   updatePostSchema,
 } from '@/lib/zod/content';
 import {
@@ -89,7 +86,7 @@ contentRoutes.patch(
   '/podcast/:id',
   validateReqParams(idSchema),
   validateReqQuery(viewerIdSchema),
-  validateReqBody(updatePostSchema),
+  validateReqBody(updatePodcastSchema),
   updatePodcast
 );
 
@@ -99,12 +96,12 @@ contentRoutes.post('/comment', validateReqBody(commentsSchema), createComment);
 
 contentRoutes.patch(
   '/comment/update',
-  validateRequestBody(commentsSchema),
+  validateReqBody(commentsSchema),
   updateComment
 );
 contentRoutes.delete(
   '/comment/delete',
-  validateRequestBody(idSchema),
+  validateReqBody(idSchema),
   deleteComment
 );
 
@@ -116,7 +113,7 @@ contentRoutes.post(
 
 contentRoutes.get(
   '/:id/comment',
-  validateRequestParams(idSchema),
+  validateReqParams(idSchema),
   validateReqQuery(viewerIdSchema),
   getAllComments
 );

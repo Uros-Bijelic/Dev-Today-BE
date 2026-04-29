@@ -47,13 +47,13 @@ export const createGroup = async (
 
     res.status(201).json({ group: newGroup });
   } catch (error) {
-    console.log('Error creating group', error);
+    console.error('Error creating group', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author ID' });
+        return res.status(400).json({ message: 'Invalid author ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -79,13 +79,13 @@ export const updateGroup = async (
 
     res.status(200).json({ group: updatedGroup });
   } catch (error) {
-    console.log('Error updating group', error);
+    console.error('Error updating group', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author ID' });
+        return res.status(400).json({ message: 'Invalid author ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -659,9 +659,6 @@ export const deleteGroup = async (
 ) => {
   const groupId = req.params.id;
   const viewerId = req.body.viewerId;
-
-  console.log('groupId', groupId);
-  console.log('viewerId', viewerId);
 
   try {
     const group = await prisma.group.findUnique({

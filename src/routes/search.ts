@@ -10,6 +10,6 @@ export const searchRoutes = express.Router();
 
 searchRoutes.get(
   '/',
-  searchGroupsAndContents,
-  validateReqQuery(searchQuerySchema)
+  validateReqQuery(searchQuerySchema),
+  searchGroupsAndContents
 );

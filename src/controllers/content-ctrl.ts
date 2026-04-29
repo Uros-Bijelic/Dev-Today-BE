@@ -20,6 +20,7 @@ import {
   postSchema,
   tagsTitleSchema,
   updateMeetupSchema,
+  updatePodcastSchema,
   updatePostSchema,
 } from '@/lib/zod/content';
 
@@ -283,13 +284,13 @@ export const createPost = async (
 
     res.status(201).json(post);
   } catch (error) {
-    console.log('Error creating post', error);
+    console.error('Error creating post', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author or group ID' });
+        return res.status(400).json({ message: 'Invalid author or group ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -337,13 +338,13 @@ export const createMeetup = async (
 
     res.status(201).json(meetup);
   } catch (error) {
-    console.log('Error creating meetup', error);
+    console.error('Error creating meetup', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author or group ID' });
+        return res.status(400).json({ message: 'Invalid author or group ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -389,13 +390,13 @@ export const createPodcast = async (
 
     res.status(201).json(podcast);
   } catch (error) {
-    console.log('Error creating podcast', error);
+    console.error('Error creating podcast', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author or group ID' });
+        return res.status(400).json({ message: 'Invalid author or group ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -457,13 +458,13 @@ export const updatePost = async (
 
     res.status(201).json(post);
   } catch (error) {
-    console.log('Error updating post', error);
+    console.error('Error updating post', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author or group ID' });
+        return res.status(400).json({ message: 'Invalid author or group ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -538,13 +539,13 @@ export const updateMeetup = async (
 
     res.status(201).json(meetup);
   } catch (error) {
-    console.log('Error updating meetup', error);
+    console.error('Error updating meetup', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author or group ID' });
+        return res.status(400).json({ message: 'Invalid author or group ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
@@ -552,7 +553,7 @@ export const updatePodcast = async (
   req: TypedRequest<
     typeof idSchema,
     typeof viewerIdSchema,
-    typeof podcastSchema
+    typeof updatePodcastSchema
   >,
   res: Response
 ) => {
@@ -609,13 +610,13 @@ export const updatePodcast = async (
 
     res.status(201).json(podcast);
   } catch (error) {
-    console.log('Error updating podcast', error);
+    console.error('Error updating podcast', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2003') {
-        res.status(400).json({ message: 'Invalid author or group ID' });
+        return res.status(400).json({ message: 'Invalid author or group ID' });
       }
     }
-    res.status(500).json({ message: 'Internal server error!' });
+    return res.status(500).json({ message: 'Internal server error!' });
   }
 };
 
